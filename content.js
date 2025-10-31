@@ -17,8 +17,9 @@ async function getYouTubeChipContainer() {
 async function createYoutubeNewChip(){
     // Create a single yt-chip-cloud-chip-renderer element
     const chip = document.createElement('div');
+    chip.id="reverse-chip";
     chip.textContent="Reverse";
-    chip.style.backgroundColor="#3f4b51";
+    chip.style.backgroundColor="rgba(255, 255, 255, 0.09)";
     chip.style.padding="10px";
     chip.style.borderRadius="16px";
     chip.style.cursor="pointer";
@@ -29,6 +30,8 @@ async function createYoutubeNewChip(){
     chip.style.padding="12px"
     chip.style.fontSize="14px";
     chip.style.margin="3px"
+    chip.style.marginTop="0px"
+    chip.style.backdropFilter="blur(10px)";
 
     chip.addEventListener('click', () => {
         whenclickedchip();
@@ -127,16 +130,25 @@ function getInfoVideosFromPlaylist(){
 
     console.log(videodata);
 }
-
+// Listen for YouTube navigation events to update and put the options
 window.addEventListener('yt-navigate-finish', async () => {
   console.log('🔁 YouTube navigation detected, reinserting chip');
   await new Promise(r => setTimeout(r, 500));
+  // Adjust playlist video container in a normal state, every time the page loads
   try {
     const container = document.getElementById("contents").querySelector("ytd-item-section-renderer [id='contents']").querySelector("ytd-item-section-renderer [id='contents']");
     container.style.flexDirection="column";
   } catch (error) {
   }
-  
-  AddNewChipToYoutubeChipContainer("Shorts");
+  // Check if chip already exists, if not, add it
+  if(document.getElementById("reverse-chip")){
+    console.log("Chip already exists, not adding again.");
+    return;
+  }else{
+    AddNewChipToYoutubeChipContainer("Shorts");
+  }
+
+  // Export 
+
 });
 
