@@ -1,31 +1,12 @@
-function waitForElement(selector, timeout = 10000) {
-  return new Promise((resolve, reject) => {
-    const interval = 100;
-    let elapsed = 0;
 
-    const timer = setInterval(() => {
-      const el = document.querySelector(selector);
-      if (el) {
-        clearInterval(timer);
-        resolve(el);
-      } else if (elapsed >= timeout) {
-        clearInterval(timer);
-        reject(`Element not found: ${selector}`);
-      }
-      elapsed += interval;
-    }, interval);
-  });
-}
 
 async function getYouTubeChipContainer() {
   try {
-    // Wait for the <iron-selector id="chips"> element to appear
-    const chipsContainer = await waitForElement('iron-selector#chips');
+    const chipsContainer = document.querySelector('div.play-menu.spaced-row.wide-screen-form.style-scope.ytd-playlist-header-renderer');
+    chipsContainer.style.display="flex";
+    chipsContainer.style.flexDirection="inherit";
+    chipsContainer.style.gap="10px";
     console.log("✅ Found chips container:", chipsContainer);
-    // Get all chip buttons inside
-    //const chips = chipsContainer.querySelectorAll('yt-chip-cloud-chip-renderer');
-    //console.log("✅ Found chips:", chips);
-
     return chipsContainer;
   } catch (err) {
     console.warn("❌", err);
@@ -35,30 +16,19 @@ async function getYouTubeChipContainer() {
 
 async function createYoutubeNewChip(){
     // Create a single yt-chip-cloud-chip-renderer element
-    const chip = document.createElement('yt-chip-cloud-chip-renderer');
-    chip.id="custom-reverse-chip";
-
-    // Set attributes and classes
-    chip.setAttribute('chip-style', 'STYLE_DEFAULT');
-    chip.className = 'style-scope ytd-feed-filter-chip-bar-renderer';
-
-    // Fill its inner HTML to match the structure you provided
-    chip.innerHTML = `
-    <div id="chip-shape-container" class="style-scope yt-chip-cloud-chip-renderer">
-        <chip-shape class="ytChipShapeHost">
-        <button class="ytChipShapeButtonReset" role="tab" aria-selected="false">
-            <div class="ytChipShapeChip ytChipShapeInactive ytChipShapeOnlyTextPadding">
-            Reverse
-            <yt-touch-feedback-shape aria-hidden="true"
-                class="yt-spec-touch-feedback-shape yt-spec-touch-feedback-shape--touch-response">
-                <div class="yt-spec-touch-feedback-shape__stroke" style="border-radius: 8px;"></div>
-                <div class="yt-spec-touch-feedback-shape__fill" style="border-radius: 8px;"></div>
-            </yt-touch-feedback-shape>
-            </div>
-        </button>
-        </chip-shape>
-    </div>
-    `;
+    const chip = document.createElement('div');
+    chip.textContent="Reverse";
+    chip.style.backgroundColor="#3f4b51";
+    chip.style.padding="10px";
+    chip.style.borderRadius="16px";
+    chip.style.cursor="pointer";
+    chip.style.color="White";
+    chip.style.fontWeight="bold";
+    chip.style.textAlign="center";
+    chip.style.borderRadius="20px";
+    chip.style.padding="12px"
+    chip.style.fontSize="14px";
+    chip.style.margin="3px"
 
     chip.addEventListener('click', () => {
         whenclickedchip();
@@ -104,7 +74,7 @@ async function getnumberofvideos(){
 
 
 async function whenclickedchip(){
-    const nvideos=await getnumberofvideos();
+    /*const nvideos=await getnumberofvideos();
     console.log(nvideos)
     const numscrolls=(nvideos/100)+1
     console.log("clicado")
@@ -117,10 +87,20 @@ async function whenclickedchip(){
         // Wait 3 seconds
         await new Promise(resolve => setTimeout(resolve, 3000));
     }
+    getInfoVideosFromPlaylist()*/
 
+    // Select the parent first
+    const container = document.getElementById("contents").querySelector("ytd-item-section-renderer [id='contents']").querySelector("ytd-item-section-renderer [id='contents']");
+    console.log(container);
+    container.style.display="flex";
 
-    getInfoVideosFromPlaylist()
+    console.log(container.style.flexDirection);
 
+    if(container.style.flexDirection==="column-reverse"){
+        container.style.flexDirection="column";
+    }else{
+        container.style.flexDirection="column-reverse";
+    }
 }
 
 
@@ -148,36 +128,15 @@ function getInfoVideosFromPlaylist(){
     console.log(videodata);
 }
 
-window.addEventListener('yt-navigate-finish', () => {
+window.addEventListener('yt-navigate-finish', async () => {
   console.log('🔁 YouTube navigation detected, reinserting chip');
+  await new Promise(r => setTimeout(r, 500));
+  try {
+    const container = document.getElementById("contents").querySelector("ytd-item-section-renderer [id='contents']").querySelector("ytd-item-section-renderer [id='contents']");
+    container.style.flexDirection="column";
+  } catch (error) {
+  }
+  
   AddNewChipToYoutubeChipContainer("Shorts");
 });
 
-// content.js
-function injectFetchInterceptor() {
-    const script = document.createElement('script');
-    script.textContent = `
-        (function() {
-            const originalFetch = window.fetch;
-            window.fetch = async (...args) => {
-                const response = await originalFetch(...args);
-
-                if (args[0].includes("/youtubei/v1/browse?prettyPrint=false")) {
-                    try {
-                        const clone = response.clone();
-                        const data = await clone.json();
-                        console.log("✅ Intercepted YouTube browse response:", data);
-                    } catch (err) {
-                        console.error("Failed to parse JSON:", err);
-                    }
-                }
-
-                return response;
-            };
-        })();
-    `;
-    document.documentElement.appendChild(script);
-    script.remove();
-}
-
-injectFetchInterceptor();

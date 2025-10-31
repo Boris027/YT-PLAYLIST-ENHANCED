@@ -1,4 +1,3 @@
-
 chrome.webRequest.onCompleted.addListener(    
 
   (details) => {
@@ -15,15 +14,4 @@ chrome.webRequest.onCompleted.addListener(
     }
   },
   { urls: ["*://*.youtube.com/*"] }
-);
-
-
-chrome.webRequest.onBeforeRequest.addListener(
-  function(details) {
-    if (details.url.includes("/youtubei/v1/browse?prettyPrint=false")){
-        console.log('Requestwena:', details);
-    }
-    console.log('Request:', details);
-  },
-  {urls: ["<all_urls>"]}
 );

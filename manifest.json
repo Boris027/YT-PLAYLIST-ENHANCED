@@ -3,7 +3,7 @@
   "name": "Hello Extensions",
   "description": "Base Level Extension",
   "version": "1.0",
-  "permissions": ["webRequest","scripting"],
+  "permissions": ["webRequest"],
   "host_permissions": ["*://*.youtube.com/*"],
   "background": {
     "service_worker": "background.js"
