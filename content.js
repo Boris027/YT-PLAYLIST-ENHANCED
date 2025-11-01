@@ -190,7 +190,7 @@ async function getInfoVideosFromPlaylist(){
     videos.forEach((video) => {
         const index=video.querySelector("#index-container yt-formatted-string").innerText.trim();
         const title=video.querySelector("#content #container #meta h3").innerText.trim();
-        const duration=video.querySelector("span.ytd-thumbnail-overlay-time-status-renderer").innerText.trim();
+        const duration=video.querySelector("span.ytd-thumbnail-overlay-time-status-renderer").textContent.trim();
         const thumbnail=video.querySelector("#thumbnail img").src;
         const url=video.querySelector("#thumbnail a").href;
         videodata.push({
