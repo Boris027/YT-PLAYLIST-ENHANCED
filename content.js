@@ -1,4 +1,3 @@
-
 //Create and Reverse Youtube Playlist Chips
 async function getYouTubeChipContainer() {
   try {
@@ -9,8 +8,23 @@ async function getYouTubeChipContainer() {
     console.log("✅ Found chips container:", chipsContainer);
     return chipsContainer;
   } catch (err) {
-    console.warn("❌", err);
+    console.warn("❌ Chips container normal not found.");
   }
+}
+
+async function getYoutubeChipContainerCustomLists(){
+    try {
+        const chipsContainer = document.querySelector('.yt-page-header-view-model__scroll-container');
+        const finaldiv=document.createElement("div");
+        finaldiv.style.display="flex";
+        finaldiv.style.flexDirection="column";
+        finaldiv.style.gap="10px";
+        finaldiv.style.marginTop="10px";
+        chipsContainer.appendChild(finaldiv);
+        return finaldiv;
+    } catch (error) {
+        console.warn("❌ Chips container for custom lists not found.");
+    }
 }
 
 async function getYoutubeVideosContainer() {
@@ -20,10 +34,10 @@ async function getYoutubeVideosContainer() {
     return container;
 }
 
-async function createYoutubeReverseChip(){
+async function createYoutubeReverseChip(number){
     // Create a single yt-chip-cloud-chip-renderer element
     const chip = document.createElement('div');
-    chip.id="reverse-chip";
+    chip.id="reverse-chip-"+number;
     chip.textContent="Reverse";
     chip.style.backgroundColor="rgba(255, 255, 255, 0.09)";
     chip.style.padding="10px";
@@ -57,10 +71,10 @@ async function createYoutubeReverseChip(){
 
 
 
-async function createYoutubeExportChip(){
+async function createYoutubeExportChip(number){
     // Create a single yt-chip-cloud-chip-renderer element
     const chip = document.createElement('div');
-    chip.id="export-chip";
+    chip.id="export-chip-"+number;
     chip.textContent="Export";
     chip.style.backgroundColor="rgba(255, 255, 255, 0.09)";
     chip.style.padding="10px";
@@ -77,7 +91,7 @@ async function createYoutubeExportChip(){
     chip.style.backdropFilter="blur(10px)";
 
     chip.addEventListener('click', () => {
-        GetData();
+        GetData(number);
     })
 
     chip.addEventListener('mouseover', () => {
@@ -95,21 +109,39 @@ async function createYoutubeExportChip(){
 async function AddNewChipToYoutubeChipContainer(){
     const chipcontainer=await getYouTubeChipContainer();
     if(chipcontainer){
-        if(!document.getElementById("reverse-chip")){
-            const newchip=await createYoutubeReverseChip();
+        if(!document.getElementById("reverse-chip-1")){
+            const newchip=await createYoutubeReverseChip(1);
             chipcontainer.appendChild(newchip);
             console.log("✅ New chip added:", newchip);
         }
-
-        if(!document.getElementById("export-chip")){
-            const exportchip=await createYoutubeExportChip();
+        if(!document.getElementById("export-chip-1")){
+            const exportchip=await createYoutubeExportChip(1);
             chipcontainer.appendChild(exportchip);
             console.log("✅ New export chip added:", exportchip);
+            createdchipscase1=true;
         }
-        
-        
+
     }else{
         console.warn("❌ Chip container not found, cannot add new chip.");
+    }
+
+    const chipcontainer2=await getYoutubeChipContainerCustomLists();
+    if(chipcontainer2){
+        if(!document.getElementById("reverse-chip-2")){
+            const newchip2=await createYoutubeReverseChip(2);
+            chipcontainer2.appendChild(newchip2);
+            console.log("✅ New chip added to custom lists container:", newchip2);
+        }
+        
+        if(!document.getElementById("export-chip-2")){
+            const exportchip2=await createYoutubeExportChip(2);
+            chipcontainer2.appendChild(exportchip2);
+            console.log("✅ New export chip added to custom lists container:", exportchip2);
+            createchipscase2=true;
+        }
+        
+    }else{
+        console.warn("❌ Chip container 2 not found, cannot add new chip.");
     }
 }
 
@@ -135,45 +167,75 @@ async function whenclickedchip(){
 
 
 //Exort Data Functionality
-async function GetData(){
-    const nvideos=await getnumberofvideos();
-    const numscrolls=(nvideos/100)+1
-    for (let i = 0; i < numscrolls; i++) {
-        // Scroll to the bottom
-        document.scrollingElement.scrollTop = document.scrollingElement.scrollHeight;
+async function GetData(number){
+    if(number==1){
+        const nvideos=await getnumberofvideos();
+        const numscrolls=(nvideos/100)
+        for (let i = 0; i < numscrolls; i++) {
+            // Scroll to the bottom
+            document.scrollingElement.scrollTop = document.scrollingElement.scrollHeight;
 
-        console.log(`Scroll ${i + 1} done`);
+            console.log(`Scroll ${i + 1} done`);
 
-        // Wait 3 seconds
-        await new Promise(resolve => setTimeout(resolve, 3000));
+            // Wait 3 seconds
+            await new Promise(resolve => setTimeout(resolve, 3000));
+        }
+        const videodata=await getInfoVideosFromPlaylist()
+        downloadJSON(JSON.stringify(videodata),getnamePlaylist());
+    }else if(number==2){
+        console.log("xdas")
+        const nvideos=await getnumberofvideos(2);
+        const numscrolls=(nvideos/100)
+        for (let i = 0; i < numscrolls; i++) {
+            // Scroll to the bottom
+            document.scrollingElement.scrollTop = document.scrollingElement.scrollHeight;
+
+            console.log(`Scroll ${i + 1} done`);
+
+            // Wait 3 seconds
+            await new Promise(resolve => setTimeout(resolve, 3000));
+        }
+        const videodata=await getInfoVideosFromPlaylist()
+        downloadJSON(JSON.stringify(videodata),getnamePlaylist());
     }
-    const videodata=await getInfoVideosFromPlaylist()
-    downloadJSON(JSON.stringify(videodata),getnamePlaylist());
+    
 }
 
 
-async function getnumberofvideos(){
-    /*const container = document.querySelector(
-        'div.metadata-stats.style-scope'
-    );
-    console.log(container)
-    if (!container) return null;
+async function getnumberofvideos(number){
+    
+    if(number==1){
+        const numberSpan = document.querySelector(
+        'ytd-browse[page-subtype="playlist"] ytd-playlist-header-renderer div div:nth-of-type(2) div:nth-of-type(1) .metadata-wrapper .metadata-action-bar .metadata-text-wrapper ytd-playlist-byline-renderer div yt-formatted-string'
+        ).textContent;
 
-    // Grab the first span inside yt-formatted-string, which contains the number
-    const numberSpan = container.querySelector('yt-formatted-string').querySelector('span:first-child').textContent;*/
+        const splitnumber=numberSpan.split(",");
+        const finalnumber=splitnumber[0]+splitnumber[1];
 
-    const numberSpan = document.querySelector(
-    'ytd-browse[page-subtype="playlist"] ytd-playlist-header-renderer div div:nth-of-type(2) div:nth-of-type(1) .metadata-wrapper .metadata-action-bar .metadata-text-wrapper ytd-playlist-byline-renderer div yt-formatted-string'
-    ).textContent;
+        if(finalnumber){
+            return parseInt(finalnumber)
+        }else{
+            return null
+        }
+    }else if(number==2){
+        const spans = document.querySelectorAll(
+            '.yt-page-header-view-model__page-header-content .yt-content-metadata-view-model__metadata-text'
+        );
 
-    const splitnumber=numberSpan.split(",");
-    const finalnumber=splitnumber[0]+splitnumber[1];
+        for (const span of spans) {
+            const text = span.textContent.trim();
+            if (/videos?$/i.test(text)) {
+            // Extract the number part (handles "5 videos", "1 video")
+            const match = text.match(/\d+/);
+            if (match) {
+                return parseInt(match[0], 10);
+            }
+            }
+        }
 
-    if(finalnumber){
-        return parseInt(finalnumber)
-    }else{
-        return null
+        return null;
     }
+    
 }
 
 function getnamePlaylist(){
@@ -221,7 +283,7 @@ function downloadJSON(data, filename = "data.json") {
 
 // Listen for YouTube navigation events to update and put the options
 window.addEventListener('yt-navigate-finish', async () => {
-    if (!location.href.startsWith("https://www.youtube.com/playlist")) {
+    if (!location.href.startsWith("https://www.youtube.com/playlist") || location.href.startsWith("https://m.youtube.com/playlist")) {
         console.log("⚠️ Not on a playlist page — skipping reverse.");
         return;
     }else{
