@@ -187,8 +187,10 @@ async function whenclickedchip(){
 
 //Exort Data Functionality
 async function GetData(number){
+    const alertBox = createAlert();
     if(number==1){
-        const nvideos=await getnumberofvideos();
+        const nvideos=await getnumberofvideos(1);
+        console.log(nvideos)
         const numscrolls=(nvideos/100)
         for (let i = 0; i < numscrolls; i++) {
             // Scroll to the bottom
@@ -210,14 +212,13 @@ async function GetData(number){
             document.scrollingElement.scrollTop = document.scrollingElement.scrollHeight;
 
             console.log(`Scroll ${i + 1} done`);
-
             // Wait 3 seconds
             await new Promise(resolve => setTimeout(resolve, 3000));
         }
         const videodata=await getInfoVideosFromPlaylist()
         downloadJSON(JSON.stringify(videodata),getnamePlaylist());
     }
-    
+    alertBox.remove();
 }
 
 
@@ -298,6 +299,29 @@ function downloadJSON(data, filename = "data.json") {
   URL.revokeObjectURL(url); 
 }
 
+
+function createAlert(){
+    const container = document.querySelector("ytd-app") || document.body;
+    // Create overlay
+    const alertBox = document.createElement("div");
+    alertBox.id = "export-alert";
+    alertBox.style.position = "fixed";
+    alertBox.style.top = "50%";
+    alertBox.style.left = "50%";
+    alertBox.style.transform = "translate(-50%, -50%)"; // center
+    alertBox.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+    alertBox.style.color = "white";
+    alertBox.style.padding = "20px 30px";
+    alertBox.style.borderRadius = "10px";
+    alertBox.style.fontSize = "16px";
+    alertBox.style.fontWeight = "bold";
+    alertBox.style.textAlign = "center";
+    alertBox.style.zIndex = "10000";
+    alertBox.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
+    alertBox.textContent = "Don't touch anything, you are exporting the playlist!";
+    container.appendChild(alertBox);
+    return alertBox;
+}
 
 
 // Listen for YouTube navigation events to update and put the options
