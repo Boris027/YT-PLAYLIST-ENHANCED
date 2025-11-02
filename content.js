@@ -39,6 +39,15 @@ async function createYoutubeReverseChip(number){
     const chip = document.createElement('div');
     chip.id="reverse-chip-"+number;
     chip.textContent="Reverse";
+    chip.innerHTML+=`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
+    <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6a6 6 0 0 1-6 6 6 6 0 0 1-6-6H4a8 8 0 0 0 8 8 8 8 0 0 0 8-8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    `
+    chip.style.flexDirection="row-reverse";
+    chip.style.display="flex";
+    chip.style.alignItems="center";
+    chip.style.justifyContent="center";
+    chip.style.gap="4px";
     chip.style.backgroundColor="rgba(255, 255, 255, 0.09)";
     chip.style.padding="10px";
     chip.style.borderRadius="16px";
@@ -47,7 +56,7 @@ async function createYoutubeReverseChip(number){
     chip.style.fontWeight="bold";
     chip.style.textAlign="center";
     chip.style.borderRadius="20px";
-    chip.style.padding="12px"
+    chip.style.padding="8px"
     chip.style.fontSize="14px";
     chip.style.margin="3px"
     chip.style.marginTop="0px"
@@ -76,6 +85,16 @@ async function createYoutubeExportChip(number){
     const chip = document.createElement('div');
     chip.id="export-chip-"+number;
     chip.textContent="Export";
+    chip.innerHTML += `
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
+    <path d="M5 20h14v-2H5v2zm7-16l5.5 5.5-1.41 1.41L13 8.83V18h-2V8.83L6.91 10.9 5.5 9.5 12 4z"/>
+    </svg>
+    `;
+    chip.style.flexDirection="row-reverse";
+    chip.style.display="flex";
+    chip.style.alignItems="center";
+    chip.style.justifyContent="center";
+    chip.style.gap="4px";
     chip.style.backgroundColor="rgba(255, 255, 255, 0.09)";
     chip.style.padding="10px";
     chip.style.borderRadius="16px";
@@ -84,7 +103,7 @@ async function createYoutubeExportChip(number){
     chip.style.fontWeight="bold";
     chip.style.textAlign="center";
     chip.style.borderRadius="20px";
-    chip.style.padding="12px"
+    chip.style.padding="8px"
     chip.style.fontSize="14px";
     chip.style.margin="3px"
     chip.style.marginTop="0px"
