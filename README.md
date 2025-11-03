@@ -1,7 +1,7 @@
 # YT-PLAYLIST-ENHANCED 🎵
 
 <p align="center">
-  <img src="https://your-image-url.com/logo.png" alt="YT-PLAYLIST-ENHANCED Logo" width="200"/>
+  <img src="./media/logoextension.png" width="200"/>
 </p>
 
 
@@ -10,7 +10,7 @@
 ---
 
 <p align="center">
-  <img src="https://your-image-url.com/popup.png" alt="Extension Popup Screenshot" width="400"/>
+  <img src="./media/Popup.jpg" alt="Extension Popup Screenshot" width="400"/>
 </p>
 
 **YT-PLAYLIST-ENHANCED** enhances your YouTube playlist experience. Easily view, reverse, import, and export playlists in JSON format.
@@ -19,17 +19,27 @@
 
 ## 🚀 Features
 
-- **View Playlists** – Browse and explore your playlists directly.
 - **Reverse Playlists** – Instantly reverse the order of any playlist.
-- **Export Playlists** – Save playlists to JSON files for backup or sharing.
-- **Import Playlists** – Load playlists from JSON files to restore or duplicate them.
+  <p align="center">
+    <img src="./media/ListExample1.jpg" alt="Playlist Example 1" width="800"/>
+  </p>
+  <p align="center">
+    <img src="./media/Listexample2.jpg" alt="Playlist Example 2" width="800"/>
+  </p>
 
-<p align="center">
-  <img src="https://your-image-url.com/buttons.png" alt="Extension Buttons Screenshot" width="400"/>
-</p>
+- **Import Playlists** – Load playlists from JSON files to restore or duplicate them.  
+  <p align="center">
+    <img src="./media/ImportLists.jpg" alt="Import Button Screenshot" width="800"/>
+  </p>
+  <p align="center">
+    <img src="./media/ImportListsclicked.jpg" alt="Import Button Clicked Screenshot" width="800"/>
+  </p>
 
-- **Reversed Button** – Quickly invert the playlist order.
-- **Import Button** – Easily import playlists from JSON files.
+- **Export Playlist Button** – Save playlists to JSON files for backup or sharing.  
+
+- **Reversed Button** – Quickly invert the playlist order.  
+- **Import Button** – Easily import playlists from JSON files.  
+
 
 ---
 
