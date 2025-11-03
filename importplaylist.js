@@ -1,7 +1,8 @@
 
 
 function getPlaylistContainer(){
-    return document.querySelector("ytd-app #content ytd-page-manager ytd-browse ytd-two-column-browse-results-renderer #primary ytd-rich-grid-renderer #contents")
+    //return document.querySelector("ytd-app #content ytd-page-manager ytd-browse ytd-two-column-browse-results-renderer #primary ytd-rich-grid-renderer #contents")
+    return document.querySelector('[role="main"] ytd-two-column-browse-results-renderer #primary ytd-rich-grid-renderer #contents')
 }
 
 function getLists(){
@@ -61,6 +62,7 @@ function importbutton(){
 
 
     const playlistcontainer=getPlaylistContainer();
+    console.log(playlistcontainer)
     playlistcontainer.appendChild(importButton);
 
 }
@@ -230,7 +232,7 @@ async function startImport(file, nameplaylist) {
     const backgroundiframe = createBackgroundIframe();
 
     // Helper to wait for an element inside the iframe
-    async function waitForElement(selector, root, timeout = 10000) {
+    async function waitForElement(selector, root, timeout = 30000) {
         const start = Date.now();
         while (Date.now() - start < timeout) {
             const el = root.querySelector(selector);
@@ -246,9 +248,26 @@ async function startImport(file, nameplaylist) {
             const newWindow = createIframe();
             backgroundiframe.appendChild(newWindow);
             newWindow.src = url;
+            const savebuttonsvg="M19 2H5a2 2 0 00-2 2v16.887c0 1.266 1.382 2.048 2.469 1.399L12 18.366l6.531 3.919c1.087.652 2.469-.131 2.469-1.397V4a2 2 0 00-2-2ZM5 20.233V4h14v16.233l-6.485-3.89-.515-.309-.515.309L5 20.233Z"
 
             newWindow.onload = async () => {
                 const iframeDoc = newWindow.contentDocument;
+                //remove sidebar and video
+                const sidebar=await waitForElement("#secondary-inner",iframeDoc)
+                sidebar.remove()
+                //const video=await waitForElement("#primary-inner #player",iframeDoc)
+                //console.log(video)
+                //video.click()
+                //video.remove();
+                //to pause the video
+                iframeDoc.dispatchEvent(new KeyboardEvent('keydown', {
+                    key: 'k',
+                    code: 'KeyK',
+                    keyCode: 75,
+                    which: 75,
+                    bubbles: true,
+                    cancelable: true
+                }));
 
                 try {
                     // Open the 3 dots button
@@ -261,9 +280,46 @@ async function startImport(file, nameplaylist) {
                         iframeDoc
                     );
 
+                    let found=false;
                     const listBox = listBox1.querySelectorAll("ytd-menu-service-item-renderer");
+                    await new Promise(r => setTimeout(r, 10000));
+                    for(const button of listBox){
+                        const path=(button.querySelector("tp-yt-paper-item yt-icon span div svg path"))
+                        //console.log(path)
+                        //console.log(path.getAttribute("d"))
+                        if(path.getAttribute("d")==savebuttonsvg){
+                            button.querySelector("tp-yt-paper-item").click()
+                            found=true;
+                            break;
+                        }
+                    }
 
-                    if (listBox.length > 1) {
+                    if(found==false){
+                        /*const thirdButton = await waitForElement(
+                            'ytd-menu-renderer #flexible-item-buttons yt-button-view-model:nth-of-type(2) button-view-model button',
+                            iframeDoc
+                        );*/
+                        const buttoncontainer = await waitForElement('#flexible-item-buttons',iframeDoc);
+                        const buttons=buttoncontainer.querySelectorAll("button")
+                        console.log(buttons)
+                        for (const btn of buttons) {
+                            const path = btn.querySelector('svg path');
+                            const d = path?.getAttribute('d');
+                            console.log('path:', d);
+
+                            // Look for the distinctive "Save" icon shape:
+                            if (d && d==(savebuttonsvg)) {
+                                btn.click();
+                                console.log('🎯 Found the SAVE button:', btn);
+                                break;
+                            }
+                        }
+
+                        
+                    }
+
+
+                    /*if (listBox.length > 1) {
                         const options = await waitForElement(
                             'tp-yt-paper-listbox ytd-menu-service-item-renderer',
                             iframeDoc
@@ -276,13 +332,16 @@ async function startImport(file, nameplaylist) {
                             iframeDoc
                         );
                         thirdButton.click();
-                    }
+                    }*/
 
                     // Wait for the playlist selection list
                     const optionstosave = await waitForElement('yt-list-view-model', iframeDoc);
+                    console.log(optionstosave)
                     const options2 = optionstosave.querySelectorAll("toggleable-list-item-view-model");
+                    console.log(options2)
 
                     for (const c of options2) {
+                        console.log(c)
                         const listname = c.querySelector(
                             "yt-list-item-view-model div .yt-list-item-view-model__text-wrapper div span"
                         ).textContent;
@@ -294,6 +353,7 @@ async function startImport(file, nameplaylist) {
                         }
                     }
                 } catch (error) {
+                    await new Promise(r => setTimeout(r, 10000));
                     console.log("Error processing URL:", url, error);
                 } finally {
                     // Clear and remove iframe
@@ -334,6 +394,7 @@ function createIframe(){
     alertBox.style.height="80%"
     alertBox.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
     alertBox.textContent = "Don't touch anything, you are exporting the playlist!";
+    alertBox.loading="lazy"
     return alertBox
 }
 
