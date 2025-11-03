@@ -228,6 +228,9 @@ function pickerModel(optionsplaylist){
 
 async function startImport(file, nameplaylist) {
     const fileobject = JSON.parse(await file[0].text());
+    console.log(fileobject)
+    console.log(fileobject[0])
+    console.log(fileobject[1])
 
     const backgroundiframe = createBackgroundIframe();
 
