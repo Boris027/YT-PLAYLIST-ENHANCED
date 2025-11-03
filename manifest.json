@@ -9,7 +9,8 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "hello.html"
+    "default_popup": "hello.html",
+    "default_icon":"logoextension.png"
   },
   "content_scripts": [
     {

@@ -1,4 +1,4 @@
-console.log("imported")
+
 
 function getPlaylistContainer(){
     return document.querySelector("ytd-app #content ytd-page-manager ytd-browse ytd-two-column-browse-results-renderer #primary ytd-rich-grid-renderer #contents")
@@ -231,19 +231,49 @@ async function startImport(file,nameplaylist){
         await new Promise(resolve => {
             newWindow.onload = resolve;
         });
-        const container=newWindow.document.querySelector("ytd-popup-container")
-        const xd=newWindow.document.querySelector("#button-shape button")
-        console.log(xd)
+        // Wait for element to appear
+        async function waitForElement(selector, root = newWindow.document, timeout = 10000) {
+            const start = Date.now();
+            while (Date.now() - start < timeout) {
+                const el = root.querySelector(selector);
+                if (el) return el;
+                await new Promise(r => setTimeout(r, 200));
+            }
+            throw new Error(`Element ${selector} not found in time`);
+        }
+
+        const container = await waitForElement("ytd-popup-container");
+        const optionsbutton = await waitForElement("#button-shape button");
+        optionsbutton.click()
+        
+        const options=await waitForElement('tp-yt-paper-listbox ytd-menu-service-item-renderer')
+        options.click();
+
+        const optionstosave=await waitForElement('yt-list-view-model')
+        console.log(optionstosave)
+        const options2=optionstosave.querySelectorAll("toggleable-list-item-view-model")
+        for(const c of options2){
+            const listname=c.querySelector("yt-list-item-view-model div .yt-list-item-view-model__text-wrapper div span").textContent
+
+            if(listname==nameplaylist){
+                c.querySelector("yt-list-item-view-model").click();
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                newWindow.close()
+                break;
+            }
+
+        }
+
         //const container=newWindow.document.querySelector("yt-list-view-model")
-        console.log(container)
+        /*console.log(container)
         const options=container.querySelectorAll("tp-yt-paper-item")
         console.log(options)
         options.forEach(c=>{
             console.log(c.querySelector("span").textContent)
-        })
+        })*/
 
 
-        await new Promise(resolve => setTimeout(resolve, 30000));
+        await new Promise(resolve => setTimeout(resolve, 3000));
     }
 
 }
