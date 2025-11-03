@@ -10,7 +10,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_icon":"logoextension.png"
+    "default_icon":"./pictures/logoextension.png"
   },
   "content_scripts": [
     {
