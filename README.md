@@ -1,9 +1,11 @@
-# YT-PLAYLIST-ENHANCED 🎵
-
 <p align="center">
   <img src="./media/logoextension.png" width="200"/>
 </p>
 
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
+
+# YT-PLAYLIST-ENHANCED 🎵
 
 **YT-PLAYLIST-ENHANCED** (formerly **YT-LISTS-MANAGER**) is a **Google Chrome extension** designed to supercharge your YouTube playlist management. Easily export, import, and organize videos, starting from the bottom of your playlists. Perfect for creators, curators, and power users who want full control over their YouTube content.
 
