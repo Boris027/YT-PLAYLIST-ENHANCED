@@ -36,10 +36,17 @@
   </p>
 
 - **Export Playlist Button** – Save playlists to JSON files for backup or sharing.  
-
-- **Reversed Button** – Quickly invert the playlist order.  
+  <p align="center">
+    <img src="./media/exportbutton.jpg" alt="Import Button Clicked Screenshot" width="400"/>
+  </p>
+- **Reversed Button** – Quickly invert the playlist order.
+  <p align="center">
+    <img src="./media/reversebutton.jpg" alt="Import Button Clicked Screenshot" width="400"/>
+  </p> 
 - **Import Button** – Easily import playlists from JSON files.  
-
+  <p align="center">
+    <img src="./media/importlistbutton.jpg" alt="Import Button Clicked Screenshot" width="200"/>
+  </p> 
 
 ---
 
